@@ -1,31 +1,103 @@
-/* ------------------- GLOBAL ------------------- */
+/* =========================================================
+   1. DESIGN TOKENS (Variables)
+========================================================= */
+:root {
+  /* Colors */
+  --color-bg: #f5f5f5;
+  --color-bg-gradient: linear-gradient(to bottom, #f5f5f5, #ececec);
+  --color-surface: #ffffff;
+  --color-text: #333;
+  --color-muted: #888;
+
+  --color-primary: #4caf50;
+  --color-primary-hover: #45a049;
+
+  --color-accent: #2196f3;
+  --color-accent-hover: #1976d2;
+
+  --color-danger: #f44336;
+  --color-danger-hover: #d32f2f;
+
+  /* Layout */
+  --max-width: 1200px;
+  --radius-lg: 12px;
+  --radius-md: 8px;
+  --shadow-sm: 0 2px 6px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 15px rgba(0,0,0,0.1);
+
+  /* Spacing */
+  --space-xs: 6px;
+  --space-sm: 10px;
+  --space-md: 20px;
+  --space-lg: 30px;
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+}
+
+/* =========================================================
+   2. BASE / RESET
+========================================================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f5f5f5;
-  color: #333;
+  background: var(--color-bg-gradient);
+  color: var(--color-text);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* ------------------- CONTAINER ------------------- */
-.container {
+/* Global button behavior */
+button {
+  cursor: pointer;
+  transition: background var(--transition-fast),
+              transform var(--transition-fast),
+              box-shadow var(--transition-fast);
+}
+
+button:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+input,
+textarea {
+  font-family: inherit;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+/* =========================================================
+   3. LAYOUT
+========================================================= */
+
+.app-container {
   width: 95%;
-  max-width: 1200px; /* max width for very large screens */
+  max-width: var(--max-width);
   margin: 0 auto;
 }
 
-/* ------------------- HEADER ------------------- */
+/* Header */
 header {
+  width: 100%;
+  padding: var(--space-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  background: #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  box-sizing: border-box;
 }
 
 header h1 {
@@ -33,64 +105,44 @@ header h1 {
   font-size: 1.8rem;
 }
 
-header button {
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: background 0.2s;
+/* Responsive Header */
+@media (max-width: 500px) {
+  header {
+    flex-direction: column;
+    gap: var(--space-sm);
+    text-align: center;
+  }
 }
 
-header button:hover {
-  background-color: #45a049;
-}
-
-
-/* ------------------- NOTES GRID ------------------- */
+/* Notes Grid (modern auto-fit version) */
 .notes {
   display: grid;
-  gap: 20px;
+  gap: var(--space-md);
   width: 100%;
-  margin: 20px auto;
-  grid-template-columns: 1fr;
+  margin: var(--space-md) auto;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
-/* >=1000px: 3 notes */
-@media (min-width: 1000px) {
-  .notes {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
+/* =========================================================
+   4. COMPONENTS
+========================================================= */
 
-/* 500px–999px: 2 notes */
-@media (min-width: 500px) and (max-width: 999px) {
-  .notes {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* <500px: 1 note */
-@media (max-width: 499px) {
-  .notes {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ------------------- NOTE CARD ------------------- */
+/* ---------- Note Card ---------- */
 .note {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-  padding: 20px;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-md);
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s;
+  min-height: 250px;
+  transition: transform var(--transition-fast),
+              box-shadow var(--transition-fast);
 }
 
 .note:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
 }
 
 .note h3 {
@@ -101,185 +153,165 @@ header button:hover {
 
 .note ul {
   padding-left: 20px;
-  margin: 10px 0;
+  margin: var(--space-sm) 0;
 }
 
 .note li {
-  margin-bottom: 6px;
+  margin-bottom: var(--space-xs);
   line-height: 1.4;
 }
 
-/* ------------------- TIMESTAMP ------------------- */
+/* Timestamp */
 .timestamp {
   font-size: 0.75rem;
-  color: #888;
+  color: var(--color-muted);
   margin-top: auto;
 }
 
-/* ------------------- ACTION BUTTONS ------------------- */
+/* ---------- Buttons ---------- */
+.btn {
+  border: none;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+}
+
+.btn-accent {
+  background: var(--color-accent);
+  color: white;
+}
+
+.btn-accent:hover {
+  background: var(--color-accent-hover);
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: white;
+}
+
+.btn-danger:hover {
+  background: var(--color-danger-hover);
+}
+
+/* ---------- Actions Row ---------- */
 .actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 12px;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
 }
 
-.actions button {
-  background: #2196f3;
-  color: white;
+/* ---------- Add Note Button ---------- */
+.add-note-button {
+  display: block;
+  width: 140px;
+  margin: var(--space-md) auto;
+  padding: var(--space-sm);
+  font-weight: bold;
+  border-radius: var(--radius-lg);
   border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  transition: background 0.2s;
+  background: var(--color-primary);
+  color: white;
 }
 
-.actions button:hover {
-  background: #1976d2;
+.add-note-button:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-2px);
 }
 
-/* ------------------- NOTE FORM ------------------- */
+/* ---------- Note Form ---------- */
 .note-form {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-  padding: 15px;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-md);
   display: flex;
   flex-direction: column;
   max-width: 400px;
-  margin: 20px auto;
+  margin: var(--space-md) auto;
 }
 
-.note-form input.note-input,
-.note-form textarea.note-textarea {
+.note-input,
+.note-textarea {
   width: 100%;
-  padding: 10px;
-  border-radius: 8px;
+  padding: var(--space-sm);
+  border-radius: var(--radius-md);
   border: 1px solid #ddd;
   font-size: 0.95rem;
-  margin-bottom: 10px;
-  box-sizing: border-box;
+  margin-bottom: var(--space-sm);
 }
 
-.note-form textarea.note-textarea {
+.note-textarea {
   min-height: 120px;
   resize: vertical;
 }
 
-.note-form .actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
+/* =========================================================
+   5. AUTH SCREEN
+========================================================= */
 
-.note-form .actions button:first-child {
-  background-color: #4caf50;
-  color: white;
-}
-
-.note-form .actions button:first-child:hover {
-  background-color: #45a049;
-}
-
-.note-form .actions button:last-child {
-  background-color: #f44336;
-  color: white;
-}
-
-.note-form .actions button:last-child:hover {
-  background-color: #d32f2f;
-}
-
-/* ------------------- ADD NOTE BUTTON ------------------- */
-.add-note-button {
-  display: block;
-  width: 120px;
-  margin: 20px auto;
-  padding: 10px 0;
-  font-size: 1rem;
-  font-weight: bold;
-  border-radius: 10px;
-  border: none;
-  background-color: #4caf50;
-  color: white;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
-}
-
-.add-note-button:hover {
-  background-color: #45a049;
-  transform: translateY(-1px);
-}
-
-/* ------------------- AUTH ------------------- */
 .auth {
   display: flex;
   flex-direction: column;
   justify-content: center;
   height: 100vh;
-  gap: 20px;
-  background: #f5f5f5;
+  gap: var(--space-md);
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
 }
 
 .auth h2 {
-  margin-bottom: 20px;
-  font-size: 2.5rem;
-  color: #333;
+  font-size: 2.2rem;
   text-align: center;
+  margin: 0;
 }
 
 .auth form {
+  background: var(--color-surface);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  background: #fff;
-  padding: 30px 40px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  width: 100%;
 }
 
 .auth input {
   padding: 12px;
-  width: 100%;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   border: 1px solid #ddd;
-  font-size: 1rem;
-  margin-bottom: 15px;
-  box-sizing: border-box;
+  margin-bottom: var(--space-sm);
 }
 
 .auth button {
   padding: 12px;
-  width: 100%;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   border: none;
-  background-color: #4caf50;
+  background: var(--color-primary);
   color: white;
-  font-size: 1rem;
-  transition: background 0.2s;
 }
 
 .auth button:hover {
-  background-color: #45a049;
+  background: var(--color-primary-hover);
 }
 
-/* ------------------- AUTH RESPONSIVE ------------------- */
+/* Responsive Auth */
 @media (max-width: 650px) {
   .auth form {
-    width: 90%; /* shrink form width */
-    padding: 20px; /* reduce padding */
+    padding: var(--space-md);
   }
 
   .auth h2 {
-    font-size: 2rem; /* smaller heading */
-  }
-
-  .auth input,
-  .auth button {
-    font-size: 0.9rem; /* slightly smaller inputs/buttons */
+    font-size: 1.8rem;
   }
 }
