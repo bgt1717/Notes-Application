@@ -3,15 +3,40 @@ import jwtDecode from "jwt-decode";
 import "./App.css";
 
 const API = import.meta.env.VITE_API_URL;
-//const API = "http://localhost:5000";
 const DEMO_KEY = "demo_notes";
+
+/* ---------------- DEFAULT DEMO NOTES ---------------- */
+const DEFAULT_DEMO_NOTES = [
+  {
+    _id: crypto.randomUUID(),
+    title: "Welcome to Notes App 👋",
+    content:
+      "• This is a demo note\n• You can edit me\n• You can delete me\n• Or create your own notes",
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    _id: crypto.randomUUID(),
+    title: "Features Included 🚀",
+    content:
+      "• JWT Authentication\n• Create, Edit, Delete Notes\n• Responsive Grid Layout\n• Demo Mode (LocalStorage)\n• Auto Bullet Formatting",
+    updatedAt: new Date().toISOString(),
+  },
+];
 
 /* ---------------- DEMO HELPERS ---------------- */
 const loadDemoNotes = () => {
   try {
-    return JSON.parse(localStorage.getItem(DEMO_KEY)) || [];
+    const existing = JSON.parse(localStorage.getItem(DEMO_KEY));
+
+    // If nothing exists → seed default notes
+    if (!existing || existing.length === 0) {
+      localStorage.setItem(DEMO_KEY, JSON.stringify(DEFAULT_DEMO_NOTES));
+      return DEFAULT_DEMO_NOTES;
+    }
+
+    return existing;
   } catch {
-    return [];
+    return DEFAULT_DEMO_NOTES;
   }
 };
 
@@ -85,6 +110,12 @@ function App() {
   /* ---------------- BULLET HANDLER ---------------- */
   const handleContentChange = (setter) => (e) => {
     let value = e.target.value;
+
+    if (!value) {
+      setter("");
+      return;
+    }
+
     if (!value.startsWith("• ")) value = "• " + value;
     value = value.replace(/\n(?!• )/g, "\n• ");
     setter(value);
@@ -101,9 +132,11 @@ function App() {
         content,
         updatedAt: new Date().toISOString(),
       };
+
       const updated = [...notes, newNote];
       setNotes(updated);
       saveDemoNotes(updated);
+
       setTitle("");
       setContent("");
       setAddingNote(false);
@@ -121,6 +154,7 @@ function App() {
 
     const newNote = await res.json();
     setNotes([...notes, newNote]);
+
     setTitle("");
     setContent("");
     setAddingNote(false);
@@ -128,6 +162,8 @@ function App() {
 
   /* ---------------- DELETE ---------------- */
   const handleDelete = async (id) => {
+    if (!window.confirm("Delete this note?")) return;
+
     if (isDemo) {
       const updated = notes.filter((n) => n._id !== id);
       setNotes(updated);
@@ -160,9 +196,15 @@ function App() {
     if (isDemo) {
       const updated = notes.map((n) =>
         n._id === id
-          ? { ...n, title: editTitle, content: editContent, updatedAt: new Date().toISOString() }
+          ? {
+              ...n,
+              title: editTitle,
+              content: editContent,
+              updatedAt: new Date().toISOString(),
+            }
           : n
       );
+
       setNotes(updated);
       saveDemoNotes(updated);
       cancelEditing();
@@ -240,7 +282,9 @@ function App() {
         <form onSubmit={isRegistering ? handleRegister : handleLogin}>
           <input name="email" type="email" placeholder="Email" required />
           <input name="password" type="password" placeholder="Password" required />
-          <button type="submit">{isRegistering ? "Register" : "Login"}</button>
+          <button type="submit">
+            {isRegistering ? "Register" : "Login"}
+          </button>
         </form>
 
         <button
@@ -256,7 +300,9 @@ function App() {
         </button>
 
         <p>
-          {isRegistering ? "Already have an account?" : "Don't have an account?"}{" "}
+          {isRegistering
+            ? "Already have an account?"
+            : "Don't have an account?"}{" "}
           <button
             onClick={() => setIsRegistering(!isRegistering)}
             style={{
@@ -349,7 +395,9 @@ function App() {
                 </div>
                 <div className="actions">
                   <button onClick={() => startEditing(note)}>✏️</button>
-                  <button onClick={() => handleDelete(note._id)}>Delete</button>
+                  <button onClick={() => handleDelete(note._id)}>
+                    Delete
+                  </button>
                 </div>
               </>
             )}
