@@ -225,11 +225,50 @@ function App() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    // Implement real login
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+
+    try {
+      const res = await fetch(`${API}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        setToken(data.token);
+        setIsRegistering(false);
+      } else {
+        alert(data.message || "Login failed");
+      }
+    } catch (err) {
+      alert("Login error: " + err.message);
+    }
   };
+
   const handleRegister = async (e) => {
     e.preventDefault();
-    // Implement real register
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+
+    try {
+      const res = await fetch(`${API}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        setToken(data.token);
+        setIsRegistering(false);
+      } else {
+        alert(data.message || "Registration failed");
+      }
+    } catch (err) {
+      alert("Registration error: " + err.message);
+    }
   };
 
   /* ---------------- AUTH SCREEN ---------------- */
