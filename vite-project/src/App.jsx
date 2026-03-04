@@ -6,7 +6,7 @@ const API = import.meta.env.VITE_API_URL;
 const DEMO_KEY = "demo_notes";
 
 /* ---------------- DEFAULT DEMO NOTES ---------------- */
-const DEFAULT_DEMO_NOTES = [
+const createDefaultDemoNotes = () => [
   {
     _id: crypto.randomUUID(),
     title: "Welcome to Notes App 👋",
@@ -28,15 +28,17 @@ const loadDemoNotes = () => {
   try {
     const existing = JSON.parse(localStorage.getItem(DEMO_KEY));
 
-    // If nothing exists → seed default notes
     if (!existing || existing.length === 0) {
-      localStorage.setItem(DEMO_KEY, JSON.stringify(DEFAULT_DEMO_NOTES));
-      return DEFAULT_DEMO_NOTES;
+      const defaults = createDefaultDemoNotes();
+      localStorage.setItem(DEMO_KEY, JSON.stringify(defaults));
+      return defaults;
     }
 
     return existing;
   } catch {
-    return DEFAULT_DEMO_NOTES;
+    const defaults = createDefaultDemoNotes();
+    localStorage.setItem(DEMO_KEY, JSON.stringify(defaults));
+    return defaults;
   }
 };
 
@@ -106,6 +108,15 @@ function App() {
       .then((data) => setNotes(data))
       .catch(console.error);
   }, [token, isDemo]);
+
+  /* ---------------- RESET DEMO ---------------- */
+  const handleResetDemo = () => {
+    if (!window.confirm("Reset demo notes to default examples?")) return;
+
+    const defaults = createDefaultDemoNotes();
+    localStorage.setItem(DEMO_KEY, JSON.stringify(defaults));
+    setNotes(defaults);
+  };
 
   /* ---------------- BULLET HANDLER ---------------- */
   const handleContentChange = (setter) => (e) => {
@@ -232,59 +243,16 @@ function App() {
     setUser(null);
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-
-    const res = await fetch(`${API}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const data = await res.json();
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-      setToken(data.token);
-    } else {
-      alert(data.message || "Login failed");
-    }
-  };
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-
-    const res = await fetch(`${API}/auth/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const data = await res.json();
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-      setToken(data.token);
-      setIsRegistering(false);
-    } else {
-      alert(data.message || "Registration failed");
-    }
-  };
-
   /* ---------------- AUTH SCREEN ---------------- */
   if (!user && !isDemo) {
     return (
       <div className="auth">
         <h2>{isRegistering ? "Register" : "Login"}</h2>
 
-        <form onSubmit={isRegistering ? handleRegister : handleLogin}>
+        <form>
           <input name="email" type="email" placeholder="Email" required />
           <input name="password" type="password" placeholder="Password" required />
-          <button type="submit">
-            {isRegistering ? "Register" : "Login"}
-          </button>
+          <button type="submit">Login</button>
         </form>
 
         <button
@@ -298,24 +266,6 @@ function App() {
         >
           Try Demo
         </button>
-
-        <p>
-          {isRegistering
-            ? "Already have an account?"
-            : "Don't have an account?"}{" "}
-          <button
-            onClick={() => setIsRegistering(!isRegistering)}
-            style={{
-              background: "none",
-              border: "none",
-              color: "#2196f3",
-              cursor: "pointer",
-              textDecoration: "underline",
-            }}
-          >
-            {isRegistering ? "Login" : "Register"}
-          </button>
-        </p>
       </div>
     );
   }
@@ -325,12 +275,19 @@ function App() {
     <div className="app-container">
       <header>
         <h1>Notes App {isDemo && "(Demo Mode)"}</h1>
-        <div>
+        <div style={{ display: "flex", gap: "10px" }}>
           {isDemo && (
-            <button onClick={() => setIsDemo(false)}>Exit Demo</button>
+            <>
+              <button onClick={handleResetDemo}>
+                Reset Demo
+              </button>
+              <button onClick={() => setIsDemo(false)}>
+                Exit Demo
+              </button>
+            </>
           )}
           {user && (
-            <button className="logout-button" onClick={handleLogout}>
+            <button onClick={handleLogout}>
               ⏻
             </button>
           )}
@@ -342,7 +299,7 @@ function App() {
           + Add Note
         </button>
       ) : (
-        <div className="note-form add-note">
+        <div className="note-form">
           <input
             className="note-input"
             placeholder="Title"
@@ -366,7 +323,7 @@ function App() {
         {notes.map((note) => (
           <div className="note" key={note._id}>
             {editingNoteId === note._id ? (
-              <div className="note-form edit-note-form">
+              <div className="note-form">
                 <input
                   className="note-input"
                   value={editTitle}
@@ -395,9 +352,7 @@ function App() {
                 </div>
                 <div className="actions">
                   <button onClick={() => startEditing(note)}>✏️</button>
-                  <button onClick={() => handleDelete(note._id)}>
-                    Delete
-                  </button>
+                  <button onClick={() => handleDelete(note._id)}>Delete</button>
                 </div>
               </>
             )}
