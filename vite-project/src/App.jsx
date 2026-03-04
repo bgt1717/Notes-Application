@@ -27,13 +27,11 @@ const createDefaultDemoNotes = () => [
 const loadDemoNotes = () => {
   try {
     const existing = JSON.parse(localStorage.getItem(DEMO_KEY));
-
     if (!existing || existing.length === 0) {
       const defaults = createDefaultDemoNotes();
       localStorage.setItem(DEMO_KEY, JSON.stringify(defaults));
       return defaults;
     }
-
     return existing;
   } catch {
     const defaults = createDefaultDemoNotes();
@@ -98,7 +96,6 @@ function App() {
       setNotes(loadDemoNotes());
       return;
     }
-
     if (!token) return;
 
     fetch(`${API}/notes`, {
@@ -112,7 +109,6 @@ function App() {
   /* ---------------- RESET DEMO ---------------- */
   const handleResetDemo = () => {
     if (!window.confirm("Reset demo notes to default examples?")) return;
-
     const defaults = createDefaultDemoNotes();
     localStorage.setItem(DEMO_KEY, JSON.stringify(defaults));
     setNotes(defaults);
@@ -121,12 +117,10 @@ function App() {
   /* ---------------- BULLET HANDLER ---------------- */
   const handleContentChange = (setter) => (e) => {
     let value = e.target.value;
-
     if (!value) {
       setter("");
       return;
     }
-
     if (!value.startsWith("• ")) value = "• " + value;
     value = value.replace(/\n(?!• )/g, "\n• ");
     setter(value);
@@ -143,11 +137,9 @@ function App() {
         content,
         updatedAt: new Date().toISOString(),
       };
-
       const updated = [...notes, newNote];
       setNotes(updated);
       saveDemoNotes(updated);
-
       setTitle("");
       setContent("");
       setAddingNote(false);
@@ -162,10 +154,8 @@ function App() {
       },
       body: JSON.stringify({ title, content }),
     });
-
     const newNote = await res.json();
     setNotes([...notes, newNote]);
-
     setTitle("");
     setContent("");
     setAddingNote(false);
@@ -186,7 +176,6 @@ function App() {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
-
     setNotes(notes.filter((n) => n._id !== id));
   };
 
@@ -196,26 +185,18 @@ function App() {
     setEditTitle(note.title);
     setEditContent(note.content);
   };
-
   const cancelEditing = () => {
     setEditingNoteId(null);
     setEditTitle("");
     setEditContent("");
   };
-
   const saveEdit = async (id) => {
     if (isDemo) {
       const updated = notes.map((n) =>
         n._id === id
-          ? {
-              ...n,
-              title: editTitle,
-              content: editContent,
-              updatedAt: new Date().toISOString(),
-            }
+          ? { ...n, title: editTitle, content: editContent, updatedAt: new Date().toISOString() }
           : n
       );
-
       setNotes(updated);
       saveDemoNotes(updated);
       cancelEditing();
@@ -230,7 +211,6 @@ function App() {
       },
       body: JSON.stringify({ title: editTitle, content: editContent }),
     });
-
     const updatedNote = await res.json();
     setNotes(notes.map((n) => (n._id === id ? updatedNote : n)));
     cancelEditing();
@@ -243,16 +223,25 @@ function App() {
     setUser(null);
   };
 
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    // Implement real login
+  };
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    // Implement real register
+  };
+
   /* ---------------- AUTH SCREEN ---------------- */
   if (!user && !isDemo) {
     return (
       <div className="auth">
         <h2>{isRegistering ? "Register" : "Login"}</h2>
 
-        <form>
+        <form onSubmit={isRegistering ? handleRegister : handleLogin}>
           <input name="email" type="email" placeholder="Email" required />
           <input name="password" type="password" placeholder="Password" required />
-          <button type="submit">Login</button>
+          <button type="submit">{isRegistering ? "Register" : "Login"}</button>
         </form>
 
         <button
@@ -262,10 +251,28 @@ function App() {
             border: "2px dashed #4caf50",
             color: "#4caf50",
             padding: "10px",
+            marginTop: "10px",
           }}
         >
           Try Demo
         </button>
+
+        <p style={{ marginTop: "15px" }}>
+          {isRegistering ? "Already have an account?" : "Don't have an account?"}{" "}
+          <button
+            type="button"
+            onClick={() => setIsRegistering(!isRegistering)}
+            style={{
+              background: "none",
+              border: "none",
+              color: "#2196f3",
+              cursor: "pointer",
+              textDecoration: "underline",
+            }}
+          >
+            {isRegistering ? "Login" : "Register"}
+          </button>
+        </p>
       </div>
     );
   }
@@ -274,23 +281,15 @@ function App() {
   return (
     <div className="app-container">
       <header>
-        <h1>Notes App {isDemo && "(Demo Mode)"}</h1>
+        <h1>Notes App {isDemo && "(Demo)"}</h1>
         <div style={{ display: "flex", gap: "10px" }}>
           {isDemo && (
             <>
-              <button onClick={handleResetDemo}>
-                Reset Demo
-              </button>
-              <button onClick={() => setIsDemo(false)}>
-                Exit Demo
-              </button>
+              <button onClick={handleResetDemo}>Reset Demo</button>
+              <button onClick={() => setIsDemo(false)}>Exit Demo</button>
             </>
           )}
-          {user && (
-            <button onClick={handleLogout}>
-              ⏻
-            </button>
-          )}
+          {user && <button onClick={handleLogout}>⏻</button>}
         </div>
       </header>
 
