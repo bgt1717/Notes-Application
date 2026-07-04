@@ -115,16 +115,20 @@ function App() {
   };
 
   /* ---------------- BULLET HANDLER ---------------- */
-  const handleContentChange = (setter) => (e) => {
-    let value = e.target.value;
-    if (!value) {
-      setter("");
-      return;
-    }
-    if (!value.startsWith("• ")) value = "• " + value;
-    value = value.replace(/\n(?!• )/g, "\n• ");
-    setter(value);
-  };
+const handleContentChange = (setter) => (e) => {
+  let value = e.target.value;
+
+  // split into lines
+  let lines = value.split("\n");
+
+  // remove bullets, then reapply cleanly
+  lines = lines.map(line => {
+    const cleaned = line.replace(/^•\s?/, "");
+    return cleaned.trim() === "" ? "" : "• " + cleaned;
+  });
+
+  setter(lines.join("\n"));
+};
 
   /* ---------------- ADD NOTE ---------------- */
   const handleAddNote = async () => {
