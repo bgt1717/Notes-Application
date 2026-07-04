@@ -256,6 +256,21 @@ header h1 {
   resize: vertical;
 }
 
+.note ul {
+  padding-left: 20px;
+  margin: var(--space-sm) 0;
+}
+
+.note li {
+  margin-bottom: var(--space-xs);
+  line-height: 1.4;
+
+  /* ✅ ADD THIS */
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 /* =========================================================
    AUTH SCREEN (LARGER + REGISTER FIXED)
 ========================================================= */
