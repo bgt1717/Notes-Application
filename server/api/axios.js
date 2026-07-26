@@ -1,27 +1,28 @@
 import axios from "axios";
 
-const LOCAL_API = "http://localhost:5000";
-const PROD_API = import.meta.env.VITE_API_URL;
-
-// If running Vite locally use localhost backend,
-// otherwise use the deployed backend.
-const baseURL =
-  window.location.hostname === "localhost"
-    ? LOCAL_API
-    : PROD_API;
+const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const API = axios.create({
-  baseURL,
+  baseURL: API_URL,
 });
 
-API.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+/*
+ Automatically attach JWT token
+ to every request
+*/
+API.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
 
-  return config;
-});
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 
 export default API;

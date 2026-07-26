@@ -97,14 +97,12 @@ function App() {
       return;
     }
     if (!token) return;
-
-    fetch(`${API}/notes`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then((data) => setNotes(data))
+    API.get("/notes")
+      .then((res)=> {
+        setNotes(res.data);
+      })
       .catch(console.error);
-  }, [token, isDemo]);
+      }, [token, isDemo]);
 
   /* ---------------- RESET DEMO ---------------- */
   const handleResetDemo = () => {
@@ -150,15 +148,11 @@ const handleContentChange = (setter) => (e) => {
       return;
     }
 
-    const res = await fetch(`${API}/notes`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ title, content }),
+    const res = await API.post("/notes", {
+      title,
+      content,
     });
-    const newNote = await res.json();
+    const newNote = res.data;
     setNotes([...notes, newNote]);
     setTitle("");
     setContent("");
@@ -175,13 +169,9 @@ const handleContentChange = (setter) => (e) => {
       saveDemoNotes(updated);
       return;
     }
-
-    await fetch(`${API}/notes/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    setNotes(notes.filter((n) => n._id !== id));
-  };
+  await API.delete(`/notes/${id}`);
+      setNotes(notes.filter((n) => n._id !== id));
+    };
 
   /* ---------------- EDIT ---------------- */
   const startEditing = (note) => {
@@ -207,15 +197,11 @@ const handleContentChange = (setter) => (e) => {
       return;
     }
 
-    const res = await fetch(`${API}/notes/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ title: editTitle, content: editContent }),
-    });
-    const updatedNote = await res.json();
+  const res = await API.put(`/notes/${id}`, {
+    title: editTitle,
+    content: editContent,
+  });
+    const updatedNote = res.data;
     setNotes(notes.map((n) => (n._id === id ? updatedNote : n)));
     cancelEditing();
   };
@@ -229,49 +215,53 @@ const handleContentChange = (setter) => (e) => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     const email = e.target.email.value;
     const password = e.target.password.value;
 
     try {
-      const res = await fetch(`${API}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      const res = await API.post("/auth/login", {
+        email,
+        password,
       });
-      const data = await res.json();
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        setToken(data.token);
-        setIsRegistering(false);
-      } else {
-        alert(data.message || "Login failed");
-      }
+
+      const data = res.data;
+
+      localStorage.setItem("token", data.token);
+      setToken(data.token);
+
     } catch (err) {
-      alert("Login error: " + err.message);
+      alert(
+        err.response?.data?.message ||
+        "Login failed"
+      );
     }
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
     const email = e.target.email.value;
     const password = e.target.password.value;
 
     try {
-      const res = await fetch(`${API}/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      const res = await API.post("/auth/register", {
+        email,
+        password,
       });
-      const data = await res.json();
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        setToken(data.token);
-        setIsRegistering(false);
-      } else {
-        alert(data.message || "Registration failed");
-      }
+
+      const data = res.data;
+
+      localStorage.setItem("token", data.token);
+      setToken(data.token);
+
+      setIsRegistering(false);
+
     } catch (err) {
-      alert("Registration error: " + err.message);
+      alert(
+        err.response?.data?.message ||
+        "Registration failed"
+      );
     }
   };
 
