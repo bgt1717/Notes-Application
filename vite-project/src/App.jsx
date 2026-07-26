@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import jwtDecode from "jwt-decode";
 import "./App.css";
+import API from "./api/axios";
 
-const API = import.meta.env.VITE_API_URL;
 const DEMO_KEY = "demo_notes";
 
 /* ---------------- DEFAULT DEMO NOTES ---------------- */
