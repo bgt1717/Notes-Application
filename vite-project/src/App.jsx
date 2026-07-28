@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import jwtDecode from "jwt-decode";
 import "./App.css";
-import API from "../../server/api/axios";
+import API from "../api/axios";
 
 const DEMO_KEY = "demo_notes";
 
