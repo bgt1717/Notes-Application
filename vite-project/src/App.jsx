@@ -108,7 +108,9 @@ const loadDemoFolders = () => {
 
 const loadDemoNotes = () => {
   try {
-    const storedNotes = JSON.parse(localStorage.getItem(DEMO_NOTES_KEY));
+    const storedNotes = JSON.parse(
+      localStorage.getItem(DEMO_NOTES_KEY)
+    );
 
     if (Array.isArray(storedNotes) && storedNotes.length > 0) {
       return storedNotes;
@@ -188,7 +190,8 @@ function App() {
   const [notes, setNotes] = useState([]);
   const [folders, setFolders] = useState([]);
 
-  const [selectedFolderId, setSelectedFolderId] = useState(ALL_NOTES);
+  const [selectedFolderId, setSelectedFolderId] =
+    useState(ALL_NOTES);
 
   const [addingNote, setAddingNote] = useState(false);
   const [title, setTitle] = useState("");
@@ -435,7 +438,8 @@ function App() {
 
     if (isDemo) {
       const duplicateFolder = folders.some(
-        (folder) => folder.name.toLowerCase() === name.toLowerCase()
+        (folder) =>
+          folder.name.toLowerCase() === name.toLowerCase()
       );
 
       if (duplicateFolder) {
@@ -467,8 +471,8 @@ function App() {
         name,
       });
 
-      const updatedFolders = [...folders, response.data].sort((a, b) =>
-        a.name.localeCompare(b.name)
+      const updatedFolders = [...folders, response.data].sort(
+        (a, b) => a.name.localeCompare(b.name)
       );
 
       setFolders(updatedFolders);
@@ -580,10 +584,14 @@ function App() {
   };
 
   const handleDeleteFolder = async (folderId) => {
-    const folder = folders.find((item) => item._id === folderId);
+    const folder = folders.find(
+      (item) => item._id === folderId
+    );
 
     const shouldDelete = window.confirm(
-      `Delete the "${folder?.name || "selected"}" folder? Its notes will move to Uncategorized.`
+      `Delete the "${
+        folder?.name || "selected"
+      }" folder? Its notes will move to Uncategorized.`
     );
 
     if (!shouldDelete) {
@@ -623,7 +631,9 @@ function App() {
       await API.delete(`/folders/${folderId}`);
 
       setFolders((currentFolders) =>
-        currentFolders.filter((folderItem) => folderItem._id !== folderId)
+        currentFolders.filter(
+          (folderItem) => folderItem._id !== folderId
+        )
       );
 
       setNotes((currentNotes) =>
@@ -880,64 +890,74 @@ function App() {
 
   if (!user && !isDemo) {
     return (
-      <div className="auth">
-        <h2>{isRegistering ? "Register" : "Login"}</h2>
+      <main className="auth-page">
+        <section className="auth">
+          <h1 className="auth-brand">Notes App</h1>
 
-        <form
-          onSubmit={isRegistering ? handleRegister : handleLogin}
-        >
-          <input
-            name="email"
-            type="email"
-            placeholder="Email"
-            autoComplete="email"
-            required
-          />
+          <h2>{isRegistering ? "Register" : "Login"}</h2>
 
-          <input
-            name="password"
-            type="password"
-            placeholder="Password"
-            autoComplete={
-              isRegistering ? "new-password" : "current-password"
+          <form
+            onSubmit={
+              isRegistering ? handleRegister : handleLogin
             }
-            minLength={6}
-            required
-          />
+          >
+            <input
+              name="email"
+              type="email"
+              placeholder="Email"
+              autoComplete="email"
+              required
+            />
 
-          <button type="submit" disabled={authLoading}>
-            {authLoading
-              ? "Please wait..."
-              : isRegistering
-                ? "Register"
-                : "Login"}
-          </button>
-        </form>
+            <input
+              name="password"
+              type="password"
+              placeholder="Password"
+              autoComplete={
+                isRegistering
+                  ? "new-password"
+                  : "current-password"
+              }
+              minLength={6}
+              required
+            />
 
-        <button
-          type="button"
-          className="demo-button"
-          onClick={() => setIsDemo(true)}
-        >
-          Try Demo
-        </button>
-
-        <p>
-          {isRegistering
-            ? "Already have an account? "
-            : "Don't have an account? "}
+            <button type="submit" disabled={authLoading}>
+              {authLoading
+                ? "Please wait..."
+                : isRegistering
+                  ? "Register"
+                  : "Login"}
+            </button>
+          </form>
 
           <button
             type="button"
-            className="auth-toggle-button"
-            onClick={() =>
-              setIsRegistering((currentValue) => !currentValue)
-            }
+            className="demo-button"
+            onClick={() => setIsDemo(true)}
           >
-            {isRegistering ? "Login" : "Register"}
+            Try Demo
           </button>
-        </p>
-      </div>
+
+          <p>
+            {isRegistering
+              ? "Already have an account? "
+              : "Don't have an account? "}
+
+            <button
+              type="button"
+              className="auth-toggle-button"
+              onClick={() =>
+                setIsRegistering(
+                  (currentValue) => !currentValue
+                )
+              }
+            >
+              {isRegistering ? "Login" : "Register"}
+            </button>
+          </p>
+        </section>
+      </main>
     );
   }
 
@@ -955,7 +975,9 @@ function App() {
             type="button"
             className="new-folder-button"
             onClick={() =>
-              setShowFolderForm((currentValue) => !currentValue)
+              setShowFolderForm(
+                (currentValue) => !currentValue
+              )
             }
           >
             +
@@ -971,7 +993,9 @@ function App() {
               type="text"
               placeholder="Folder name"
               value={newFolderName}
-              onChange={(e) => setNewFolderName(e.target.value)}
+              onChange={(e) =>
+                setNewFolderName(e.target.value)
+              }
               maxLength={50}
               autoFocus
             />
@@ -1003,7 +1027,9 @@ function App() {
             onClick={() => setSelectedFolderId(ALL_NOTES)}
           >
             <span>🗒️ All Notes</span>
-            <span className="folder-count">{notes.length}</span>
+            <span className="folder-count">
+              {notes.length}
+            </span>
           </button>
 
           <button
@@ -1013,7 +1039,9 @@ function App() {
                 ? "folder-item active"
                 : "folder-item"
             }
-            onClick={() => setSelectedFolderId(UNCATEGORIZED)}
+            onClick={() =>
+              setSelectedFolderId(UNCATEGORIZED)
+            }
           >
             <span>📄 Uncategorized</span>
             <span className="folder-count">
@@ -1077,7 +1105,9 @@ function App() {
                     <button
                       type="button"
                       aria-label={`Rename ${folder.name}`}
-                      onClick={() => startFolderEditing(folder)}
+                      onClick={() =>
+                        startFolderEditing(folder)
+                      }
                     >
                       ✏️
                     </button>
@@ -1104,12 +1134,17 @@ function App() {
           <div>
             <h1>
               {selectedFolderName}
-              {isDemo && <span className="demo-label"> Demo</span>}
+
+              {isDemo && (
+                <span className="demo-label">Demo</span>
+              )}
             </h1>
 
             <p className="note-count">
               {filteredNotes.length}{" "}
-              {filteredNotes.length === 1 ? "note" : "notes"}
+              {filteredNotes.length === 1
+                ? "note"
+                : "notes"}
             </p>
           </div>
 
@@ -1175,7 +1210,10 @@ function App() {
               <option value="">Uncategorized</option>
 
               {folders.map((folder) => (
-                <option key={folder._id} value={folder._id}>
+                <option
+                  key={folder._id}
+                  value={folder._id}
+                >
                   {folder.name}
                 </option>
               ))}
@@ -1189,11 +1227,17 @@ function App() {
             />
 
             <div className="actions">
-              <button type="button" onClick={handleAddNote}>
+              <button
+                type="button"
+                onClick={handleAddNote}
+              >
                 Add
               </button>
 
-              <button type="button" onClick={cancelAddingNote}>
+              <button
+                type="button"
+                onClick={cancelAddingNote}
+              >
                 Cancel
               </button>
             </div>
@@ -1205,7 +1249,9 @@ function App() {
         ) : filteredNotes.length === 0 ? (
           <div className="empty-state">
             <h2>No notes here yet</h2>
-            <p>Create a note in this folder to get started.</p>
+            <p>
+              Create a note in this folder to get started.
+            </p>
           </div>
         ) : (
           <div className="notes">
@@ -1229,7 +1275,9 @@ function App() {
                         setEditFolderId(e.target.value)
                       }
                     >
-                      <option value="">Uncategorized</option>
+                      <option value="">
+                        Uncategorized
+                      </option>
 
                       {folders.map((folder) => (
                         <option
@@ -1280,7 +1328,9 @@ function App() {
                         .split("\n")
                         .filter((line) => line.trim())
                         .map((line, index) => (
-                          <li key={`${note._id}-${index}`}>
+                          <li
+                            key={`${note._id}-${index}`}
+                          >
                             {line.replace(/^•\s?/, "")}
                           </li>
                         ))}

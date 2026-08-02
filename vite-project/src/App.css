@@ -3,7 +3,6 @@
 ========================================================= */
 
 :root {
-  /* Colors */
   --color-bg: #f4f6f8;
   --color-surface: #ffffff;
   --color-surface-soft: #f8fafb;
@@ -27,27 +26,16 @@
   --color-sidebar-hover: #f1f5f7;
   --color-sidebar-active: #e8f5e9;
 
-  /* Layout */
   --sidebar-width: 280px;
   --content-max-width: 1100px;
 
-  /* Radius */
   --radius-sm: 6px;
   --radius-md: 9px;
   --radius-lg: 14px;
 
-  /* Shadows */
   --shadow-sm: 0 2px 8px rgba(23, 35, 44, 0.06);
   --shadow-md: 0 8px 24px rgba(23, 35, 44, 0.1);
 
-  /* Spacing */
-  --space-xs: 6px;
-  --space-sm: 10px;
-  --space-md: 16px;
-  --space-lg: 24px;
-  --space-xl: 32px;
-
-  /* Motion */
   --transition-fast: 0.18s ease;
 }
 
@@ -61,16 +49,22 @@
   box-sizing: border-box;
 }
 
-html {
-  min-height: 100%;
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100vh;
 }
 
 body {
-  min-height: 100vh;
   margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: var(--color-bg);
   color: var(--color-text);
+}
+
+#root {
+  min-height: 100vh;
 }
 
 button,
@@ -104,41 +98,54 @@ select:focus {
 }
 
 /* =========================================================
-   3. AUTH SCREEN
+   3. AUTH PAGE
 ========================================================= */
 
-.auth {
-  width: min(100% - 32px, 520px);
+.auth-page {
+  width: 100%;
   min-height: 100vh;
-  margin: 0 auto;
-  padding: 48px 0;
+  padding: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--color-bg);
+}
+
+.auth {
+  width: min(100%, 520px);
 
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  gap: 24px;
+  gap: 22px;
 }
 
-.auth h2,
-.auth form,
-.demo-button,
-.auth p {
+.auth-brand {
   width: 100%;
+  margin: 0;
+  text-align: center;
+  color: var(--color-primary);
+  font-size: 2rem;
 }
 
 .auth h2 {
+  width: 100%;
   margin: 0;
   text-align: center;
-  font-size: 3rem;
+  font-size: 2.8rem;
   line-height: 1.1;
 }
 
 .auth form {
+  width: 100%;
   padding: 42px;
+
   display: flex;
   flex-direction: column;
   gap: 18px;
+
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -149,21 +156,26 @@ select:focus {
   width: 100%;
   min-height: 56px;
   padding: 15px 16px;
+
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
+
   font-size: 1.05rem;
 }
 
 .auth form button {
   min-height: 54px;
   padding: 14px 18px;
+
   border: none;
   border-radius: var(--radius-md);
   background: var(--color-primary);
   color: #ffffff;
+
   font-size: 1.05rem;
   font-weight: 700;
+
   transition:
     background var(--transition-fast),
     transform var(--transition-fast);
@@ -175,13 +187,17 @@ select:focus {
 }
 
 .demo-button {
+  width: 100%;
   min-height: 52px;
   padding: 14px 18px;
+
   border: 2px dashed var(--color-primary);
   border-radius: var(--radius-md);
   background: transparent;
   color: var(--color-primary);
+
   font-weight: 700;
+
   transition:
     background var(--transition-fast),
     color var(--transition-fast);
@@ -193,6 +209,7 @@ select:focus {
 }
 
 .auth p {
+  width: 100%;
   margin: 0;
   text-align: center;
   color: var(--color-text-soft);
@@ -218,6 +235,7 @@ select:focus {
 .app-shell {
   width: 100%;
   min-height: 100vh;
+
   display: grid;
   grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
 }
@@ -225,16 +243,17 @@ select:focus {
 .sidebar {
   position: sticky;
   top: 0;
+
   height: 100vh;
   padding: 22px 16px;
   overflow-y: auto;
+
   background: var(--color-sidebar);
   border-right: 1px solid var(--color-border);
 }
 
 .main-content {
   width: 100%;
-  margin: 0 auto;
   padding: 24px 30px 40px;
 
   display: flex;
@@ -247,12 +266,13 @@ select:focus {
 ========================================================= */
 
 .sidebar-header {
+  margin-bottom: 18px;
+  padding: 0 4px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-sm);
-  margin-bottom: 18px;
-  padding: 0 4px;
+  gap: 10px;
 }
 
 .sidebar-header h2 {
@@ -264,15 +284,19 @@ select:focus {
   width: 36px;
   height: 36px;
   padding: 0;
+
   display: grid;
   place-items: center;
+
   border: none;
   border-radius: 50%;
   background: var(--color-primary);
   color: #ffffff;
+
   font-size: 1.4rem;
   font-weight: 700;
   line-height: 1;
+
   transition:
     background var(--transition-fast),
     transform var(--transition-fast);
@@ -286,9 +310,11 @@ select:focus {
 .folder-form {
   margin-bottom: 16px;
   padding: 12px;
+
   display: flex;
   flex-direction: column;
   gap: 10px;
+
   background: var(--color-surface-soft);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -298,6 +324,7 @@ select:focus {
 .folder-edit-form input {
   width: 100%;
   padding: 9px 10px;
+
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: var(--color-surface);
@@ -353,6 +380,7 @@ select:focus {
 
 .folder-row {
   position: relative;
+
   display: flex;
   align-items: center;
   gap: 4px;
@@ -362,15 +390,19 @@ select:focus {
   width: 100%;
   min-width: 0;
   padding: 10px 11px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+
   border: none;
   border-radius: var(--radius-md);
   background: transparent;
   color: var(--color-text);
+
   text-align: left;
+
   transition:
     background var(--transition-fast),
     color var(--transition-fast);
@@ -396,9 +428,11 @@ select:focus {
 .folder-count {
   min-width: 26px;
   padding: 2px 7px;
+
   border-radius: 999px;
   background: #e9eef1;
   color: var(--color-text-soft);
+
   font-size: 0.76rem;
   text-align: center;
 }
@@ -411,7 +445,9 @@ select:focus {
 .folder-actions {
   display: flex;
   gap: 2px;
+
   opacity: 0;
+
   transition: opacity var(--transition-fast);
 }
 
@@ -423,8 +459,10 @@ select:focus {
   width: 29px;
   height: 29px;
   padding: 0;
+
   display: grid;
   place-items: center;
+
   border: none;
   border-radius: var(--radius-sm);
   background: transparent;
@@ -444,9 +482,11 @@ select:focus {
 .folder-edit-form {
   width: 100%;
   padding: 8px;
+
   display: grid;
   grid-template-columns: 1fr auto auto;
   gap: 6px;
+
   background: var(--color-surface-soft);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -488,11 +528,14 @@ select:focus {
 .demo-label {
   margin-left: 8px;
   padding: 4px 8px;
+
   display: inline-block;
   vertical-align: middle;
+
   border-radius: 999px;
   background: var(--color-primary-soft);
   color: #2f7c35;
+
   font-size: 0.74rem;
   font-weight: 700;
 }
@@ -500,18 +543,21 @@ select:focus {
 .header-actions {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 9px;
   flex-wrap: wrap;
-  justify-content: flex-end;
 }
 
 .header-actions button {
   padding: 9px 13px;
+
   border: none;
   border-radius: var(--radius-md);
   background: var(--color-primary);
   color: #ffffff;
+
   font-weight: 700;
+
   transition:
     background var(--transition-fast),
     transform var(--transition-fast);
@@ -526,8 +572,10 @@ select:focus {
   width: 40px;
   height: 40px;
   padding: 0 !important;
+
   display: grid;
   place-items: center;
+
   background: var(--color-danger) !important;
 }
 
@@ -543,13 +591,17 @@ select:focus {
   min-width: 145px;
   margin: 0 auto 24px;
   padding: 12px 18px;
+
   display: block;
+
   border: none;
   border-radius: var(--radius-md);
   background: var(--color-primary);
   color: #ffffff;
+
   font-weight: 700;
   box-shadow: var(--shadow-sm);
+
   transition:
     background var(--transition-fast),
     transform var(--transition-fast),
@@ -568,6 +620,7 @@ select:focus {
 
 .note-form {
   width: 100%;
+
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -578,6 +631,7 @@ select:focus {
   max-width: 620px;
   margin: 0 auto 28px;
   padding: 20px;
+
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -594,6 +648,7 @@ select:focus {
 .note-textarea,
 .folder-select {
   width: 100%;
+
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
@@ -608,6 +663,7 @@ select:focus {
 .note-textarea {
   min-height: 145px;
   padding: 12px;
+
   resize: vertical;
   line-height: 1.5;
 }
@@ -618,6 +674,7 @@ select:focus {
 
 .actions {
   margin-top: auto;
+
   display: flex;
   justify-content: flex-end;
   gap: 9px;
@@ -626,11 +683,14 @@ select:focus {
 
 .actions button {
   padding: 8px 13px;
+
   border: none;
   border-radius: var(--radius-sm);
   background: var(--color-accent);
   color: #ffffff;
+
   font-weight: 700;
+
   transition:
     background var(--transition-fast),
     transform var(--transition-fast);
@@ -667,7 +727,10 @@ select:focus {
   margin: 0 auto;
 
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(290px, 1fr)
+  );
   gap: 20px;
 }
 
@@ -704,8 +767,9 @@ select:focus {
 }
 
 .note h3 {
-  margin: 0;
   min-width: 0;
+  margin: 0;
+
   font-size: 1.3rem;
   line-height: 1.3;
   overflow-wrap: anywhere;
@@ -715,11 +779,14 @@ select:focus {
   flex-shrink: 0;
   max-width: 130px;
   padding: 4px 8px;
+
   border-radius: 999px;
   background: var(--color-primary-soft);
   color: #2f7c35;
+
   font-size: 0.73rem;
   font-weight: 700;
+
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -732,6 +799,7 @@ select:focus {
 
 .note li {
   margin-bottom: 7px;
+
   line-height: 1.48;
   overflow-wrap: anywhere;
 }
@@ -739,6 +807,7 @@ select:focus {
 .timestamp {
   margin-top: auto;
   padding-top: 12px;
+
   color: var(--color-muted);
   font-size: 0.75rem;
 }
@@ -753,6 +822,7 @@ select:focus {
   max-width: 620px;
   margin: 40px auto;
   padding: 34px;
+
   text-align: center;
   color: var(--color-text-soft);
 }
@@ -786,7 +856,10 @@ select:focus {
   }
 
   .notes {
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(260px, 1fr)
+    );
   }
 
   .folder-actions {
@@ -799,23 +872,40 @@ select:focus {
 ========================================================= */
 
 @media (max-width: 720px) {
+  .auth-page {
+    padding: 20px;
+  }
+
+  .auth form {
+    padding: 28px 22px;
+  }
+
+  .auth h2 {
+    font-size: 2.35rem;
+  }
+
   .app-shell {
     display: block;
   }
 
   .sidebar {
     position: static;
+
     width: 100%;
     height: auto;
     max-height: none;
     padding: 16px;
+
     border-right: none;
     border-bottom: 1px solid var(--color-border);
   }
 
   .folder-list {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(
+      2,
+      minmax(0, 1fr)
+    );
     gap: 7px;
   }
 
@@ -843,11 +933,11 @@ select:focus {
 
   .main-content {
     padding: 16px;
-    align-items: center;
   }
 
   .app-header {
     padding: 18px;
+
     align-items: flex-start;
     flex-direction: column;
   }
@@ -860,18 +950,6 @@ select:focus {
   .notes {
     grid-template-columns: 1fr;
   }
-
-  .auth {
-    width: min(100% - 24px, 520px);
-  }
-
-  .auth form {
-    padding: 28px 22px;
-  }
-
-  .auth h2 {
-    font-size: 2.35rem;
-  }
 }
 
 /* =========================================================
@@ -879,6 +957,26 @@ select:focus {
 ========================================================= */
 
 @media (max-width: 460px) {
+  .auth-page {
+    padding: 14px;
+  }
+
+  .auth {
+    gap: 18px;
+  }
+
+  .auth-brand {
+    font-size: 1.65rem;
+  }
+
+  .auth h2 {
+    font-size: 2.1rem;
+  }
+
+  .auth form {
+    padding: 24px 18px;
+  }
+
   .folder-list {
     grid-template-columns: 1fr;
   }
@@ -914,18 +1012,5 @@ select:focus {
 
   .actions button {
     flex: 1;
-  }
-
-  .auth {
-    padding: 28px 0;
-    gap: 18px;
-  }
-
-  .auth form {
-    padding: 24px 18px;
-  }
-
-  .auth h2 {
-    font-size: 2.1rem;
   }
 }
