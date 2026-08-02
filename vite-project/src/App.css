@@ -1,396 +1,909 @@
 /* =========================================================
-   1. DESIGN TOKENS (Variables)
+   1. DESIGN TOKENS
 ========================================================= */
+
 :root {
   /* Colors */
-  --color-bg: #f5f5f5;
-  --color-bg-gradient: linear-gradient(to bottom, #f5f5f5, #ececec);
+  --color-bg: #f4f6f8;
   --color-surface: #ffffff;
-  --color-text: #333;
-  --color-muted: #888;
+  --color-surface-soft: #f8fafb;
+  --color-border: #dde3e8;
+
+  --color-text: #263238;
+  --color-text-soft: #607d8b;
+  --color-muted: #8796a1;
 
   --color-primary: #4caf50;
-  --color-primary-hover: #45a049;
+  --color-primary-hover: #3f9444;
+  --color-primary-soft: #e9f6ea;
 
   --color-accent: #2196f3;
   --color-accent-hover: #1976d2;
 
-  --color-danger: #f44336;
-  --color-danger-hover: #d32f2f;
+  --color-danger: #e5484d;
+  --color-danger-hover: #c9363c;
+
+  --color-sidebar: #ffffff;
+  --color-sidebar-hover: #f1f5f7;
+  --color-sidebar-active: #e8f5e9;
 
   /* Layout */
-  --max-width: 1200px;
-  --radius-lg: 12px;
-  --radius-md: 8px;
-  --shadow-sm: 0 2px 6px rgba(0,0,0,0.08);
-  --shadow-md: 0 4px 15px rgba(0,0,0,0.1);
+  --sidebar-width: 280px;
+  --content-max-width: 1300px;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 9px;
+  --radius-lg: 14px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(23, 35, 44, 0.06);
+  --shadow-md: 0 8px 24px rgba(23, 35, 44, 0.1);
 
   /* Spacing */
   --space-xs: 6px;
   --space-sm: 10px;
-  --space-md: 20px;
-  --space-lg: 30px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
 
-  /* Transitions */
-  --transition-fast: 0.2s ease;
+  /* Motion */
+  --transition-fast: 0.18s ease;
 }
 
 /* =========================================================
-   2. BASE / RESET
+   2. RESET / BASE
 ========================================================= */
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: var(--color-bg-gradient);
-  color: var(--color-text);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+html {
+  min-height: 100%;
 }
 
-/* Global button behavior */
+body {
+  min-height: 100vh;
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
 button {
   cursor: pointer;
-  transition: background var(--transition-fast),
-              transform var(--transition-fast),
-              box-shadow var(--transition-fast);
 }
 
-button:focus {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
 }
 
 input,
-textarea {
-  font-family: inherit;
+textarea,
+select {
+  color: var(--color-text);
 }
 
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.16);
 }
 
 /* =========================================================
-   3. LAYOUT
+   3. AUTH SCREEN
 ========================================================= */
 
-.app-container {
-  width: 95%;
-  max-width: var(--max-width);
+.auth {
+  width: min(100% - 32px, 520px);
+  min-height: 100vh;
   margin: 0 auto;
-}
-
-/* Header */
-header {
-  width: 100%;
-  padding: var(--space-md);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-header h1 {
-  margin: 0;
-  font-size: 1.8rem;
-}
-
-/* Responsive Header */
-@media (max-width: 500px) {
-  header {
-    flex-direction: column;
-    gap: var(--space-sm);
-    text-align: center;
-  }
-}
-
-/* Notes Grid (modern auto-fit version) */
-.notes {
-  display: grid;
-  gap: var(--space-md);
-  width: 100%;
-  margin: var(--space-md) auto;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-
-/* =========================================================
-   4. COMPONENTS
-========================================================= */
-
-/* ---------- Note Card ---------- */
-.note {
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  padding: var(--space-md);
+  padding: 48px 0;
   display: flex;
   flex-direction: column;
-  min-height: 250px;
-  transition: transform var(--transition-fast),
-              box-shadow var(--transition-fast);
+  justify-content: center;
+  gap: 24px;
 }
 
-.note:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+.auth h2 {
+  margin: 0;
+  text-align: center;
+  font-size: 3rem;
+  line-height: 1.1;
 }
 
-.note h3 {
-  margin-top: 0;
-  font-size: 1.3rem;
-  word-break: break-word;
+.auth form {
+  width: 100%;
+  padding: 42px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
-.note ul {
-  padding-left: 20px;
-  margin: var(--space-sm) 0;
-}
-
-.note li {
-  margin-bottom: var(--space-xs);
-  line-height: 1.4;
-}
-
-/* Timestamp */
-.timestamp {
-  font-size: 0.75rem;
-  color: var(--color-muted);
-  margin-top: auto;
-}
-
-/* ---------- Buttons ---------- */
-.btn {
-  border: none;
-  padding: 8px 14px;
+.auth input {
+  width: 100%;
+  min-height: 56px;
+  padding: 15px 16px;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  font-size: 0.9rem;
+  background: var(--color-surface);
+  font-size: 1.05rem;
 }
 
-.btn-primary {
+.auth form button {
+  min-height: 54px;
+  padding: 14px 18px;
+  border: none;
+  border-radius: var(--radius-md);
   background: var(--color-primary);
-  color: white;
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  transition:
+    background var(--transition-fast),
+    transform var(--transition-fast);
 }
 
-.btn-primary:hover {
+.auth form button:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+.demo-button {
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 18px;
+  border: 2px dashed var(--color-primary);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-primary);
+  font-weight: 700;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.demo-button:hover {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+.auth p {
+  margin: 0;
+  text-align: center;
+  color: var(--color-text-soft);
+}
+
+.auth-toggle-button {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-accent);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.auth-toggle-button:hover {
+  color: var(--color-accent-hover);
+}
+
+/* =========================================================
+   4. APPLICATION LAYOUT
+========================================================= */
+
+.app-shell {
+  width: 100%;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 22px 16px;
+  overflow-y: auto;
+  background: var(--color-sidebar);
+  border-right: 1px solid var(--color-border);
+}
+
+.main-content {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 24px 30px 40px;
+}
+
+/* =========================================================
+   5. SIDEBAR
+========================================================= */
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: 18px;
+  padding: 0 4px;
+}
+
+.sidebar-header h2 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.new-folder-button {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #ffffff;
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
+  transition:
+    background var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.new-folder-button:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+.folder-form {
+  margin-bottom: 16px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.folder-form input,
+.folder-edit-form input {
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.folder-form-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.folder-form-actions button,
+.folder-edit-form button {
+  padding: 7px 10px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.folder-form-actions button:first-child,
+.folder-edit-form button:nth-of-type(1) {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+.folder-form-actions button:first-child:hover,
+.folder-edit-form button:nth-of-type(1):hover {
   background: var(--color-primary-hover);
 }
 
-.btn-accent {
-  background: var(--color-accent);
-  color: white;
+.folder-form-actions button:last-child,
+.folder-edit-form button:nth-of-type(2) {
+  background: #e8edf0;
+  color: var(--color-text);
 }
 
-.btn-accent:hover {
-  background: var(--color-accent-hover);
+.folder-form-actions button:last-child:hover,
+.folder-edit-form button:nth-of-type(2):hover {
+  background: #dce3e7;
 }
 
-.btn-danger {
-  background: var(--color-danger);
-  color: white;
-}
-
-.btn-danger:hover {
-  background: var(--color-danger-hover);
-}
-
-/* ---------- Actions Row ---------- */
-.actions {
+.folder-list {
   display: flex;
-  justify-content: flex-end;
-  gap: var(--space-sm);
-  margin-top: var(--space-sm);
+  flex-direction: column;
+  gap: 5px;
 }
 
-/* ---------- Add Note Button ---------- */
-.add-note-button {
-  display: block;
-  width: 140px;
-  margin: var(--space-md) auto;
-  padding: var(--space-sm);
-  font-weight: bold;
-  border-radius: var(--radius-lg);
+.folder-divider {
+  height: 1px;
+  margin: 10px 4px;
+  background: var(--color-border);
+}
+
+.folder-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.folder-item {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 11px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
   border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text);
+  text-align: left;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.folder-item > span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.folder-item:hover {
+  background: var(--color-sidebar-hover);
+}
+
+.folder-item.active {
+  background: var(--color-sidebar-active);
+  color: #256b2b;
+  font-weight: 700;
+}
+
+.folder-count {
+  min-width: 26px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #e9eef1;
+  color: var(--color-text-soft);
+  font-size: 0.76rem;
+  text-align: center;
+}
+
+.folder-item.active .folder-count {
+  background: #cae8cd;
+  color: #256b2b;
+}
+
+.folder-actions {
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.folder-row:hover .folder-actions {
+  opacity: 1;
+}
+
+.folder-actions button {
+  width: 29px;
+  height: 29px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-soft);
+}
+
+.folder-actions button:hover {
+  background: #e9eef1;
+  color: var(--color-text);
+}
+
+.folder-actions button:last-child:hover {
+  background: #fdebec;
+  color: var(--color-danger);
+}
+
+.folder-edit-form {
+  width: 100%;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 6px;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+/* =========================================================
+   6. HEADER
+========================================================= */
+
+.app-header {
+  width: 100%;
+  margin-bottom: 24px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.9rem;
+  line-height: 1.2;
+}
+
+.note-count {
+  margin: 5px 0 0;
+  color: var(--color-text-soft);
+  font-size: 0.92rem;
+}
+
+.demo-label {
+  margin-left: 8px;
+  padding: 4px 8px;
+  display: inline-block;
+  vertical-align: middle;
+  border-radius: 999px;
+  background: var(--color-primary-soft);
+  color: #2f7c35;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.header-actions button {
+  padding: 9px 13px;
+  border: none;
+  border-radius: var(--radius-md);
   background: var(--color-primary);
-  color: white;
+  color: #ffffff;
+  font-weight: 700;
+  transition:
+    background var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.header-actions button:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+.logout-button {
+  width: 40px;
+  height: 40px;
+  padding: 0 !important;
+  display: grid;
+  place-items: center;
+  background: var(--color-danger) !important;
+}
+
+.logout-button:hover {
+  background: var(--color-danger-hover) !important;
+}
+
+/* =========================================================
+   7. ADD NOTE BUTTON
+========================================================= */
+
+.add-note-button {
+  min-width: 145px;
+  margin: 0 auto 24px;
+  padding: 12px 18px;
+  display: block;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+  transition:
+    background var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .add-note-button:hover {
   background: var(--color-primary-hover);
   transform: translateY(-2px);
-}
-
-/* ---------- Note Form ---------- */
-.note-form {
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  padding: var(--space-md);
-  flex-direction: column;
-  max-width: 600px;
-  margin: var(--space-md) auto;
-}
-
-.note-input,
-.note-textarea {
-  width: 100%;
-  padding: var(--space-sm);
-  border-radius: var(--radius-md);
-  border: 1px solid #ddd;
-  font-size: 0.95rem;
-  margin-bottom: var(--space-sm);
-}
-
-.note textarea {
-  width: 100%;
-  min-height: 160px;
-  font-size: 1rem;
-  padding: 10px;
-  line-height: 1.5;
-  resize: vertical;
-}
-
-.note ul {
-  padding-left: 20px;
-  margin: var(--space-sm) 0;
-}
-
-.note li {
-  margin-bottom: var(--space-xs);
-  line-height: 1.4;
-
-  /* ✅ ADD THIS */
-  white-space: normal;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  box-shadow: var(--shadow-md);
 }
 
 /* =========================================================
-   AUTH SCREEN (LARGER + REGISTER FIXED)
+   8. NOTE FORMS
 ========================================================= */
 
-.auth {
+.note-form {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  gap: 30px;
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
+  gap: 12px;
+}
+
+.add-note-form {
+  max-width: 620px;
+  margin: 0 auto 28px;
   padding: 20px;
-}
-
-/* Heading */
-.auth h2 {
-  font-size: 3rem;
-  text-align: center;
-  margin: 0;
-}
-
-/* Form Card */
-.auth form {
   background: var(--color-surface);
-  padding: 40px;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+}
+
+.edit-note-form {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.note-input,
+.note-textarea,
+.folder-select {
   width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
 }
 
-/* Inputs */
-.auth input {
-  padding: 16px;
-  border-radius: var(--radius-md);
-  border: 1px solid #ddd;
-  font-size: 1.1rem;
+.note-input,
+.folder-select {
+  min-height: 44px;
+  padding: 10px 12px;
 }
 
-/* Main Submit Button (Login/Register) */
-.auth form button {
-  padding: 16px;
-  border-radius: var(--radius-md);
+.note-textarea {
+  min-height: 145px;
+  padding: 12px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.folder-select {
+  cursor: pointer;
+}
+
+.actions {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.actions button {
+  padding: 8px 13px;
   border: none;
-  background: var(--color-primary);
-  color: white;
-  font-size: 1.1rem;
-  font-weight: 600;
-  transition: background 0.2s ease;
+  border-radius: var(--radius-sm);
+  background: var(--color-accent);
+  color: #ffffff;
+  font-weight: 700;
+  transition:
+    background var(--transition-fast),
+    transform var(--transition-fast);
 }
 
-.auth form button:hover {
+.actions button:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-1px);
+}
+
+.actions button:last-child {
+  background: var(--color-danger);
+}
+
+.actions button:last-child:hover {
+  background: var(--color-danger-hover);
+}
+
+.note-form .actions button:first-child {
+  background: var(--color-primary);
+}
+
+.note-form .actions button:first-child:hover {
   background: var(--color-primary-hover);
 }
 
-/* Demo Button */
-.auth > button {
+/* =========================================================
+   9. NOTES GRID
+========================================================= */
+
+.notes {
   width: 100%;
-  padding: 14px;
-  border-radius: var(--radius-md);
-  font-size: 1rem;
-  background: transparent;
-  border: 2px dashed var(--color-primary);
-  color: var(--color-primary);
-  transition: background 0.2s ease, color 0.2s ease;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 20px;
 }
 
-.auth > button:hover {
-  background: var(--color-primary);
-  color: white;
+.note {
+  min-width: 0;
+  min-height: 260px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    border-color var(--transition-fast);
 }
 
-/* Register / Login Toggle Text */
-.auth p {
+.note:hover {
+  transform: translateY(-3px);
+  border-color: #cfd8dd;
+  box-shadow: var(--shadow-md);
+}
+
+.note-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.note h3 {
+  margin: 0;
+  min-width: 0;
+  font-size: 1.3rem;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.note-folder-badge {
+  flex-shrink: 0;
+  max-width: 130px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--color-primary-soft);
+  color: #2f7c35;
+  font-size: 0.73rem;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.note ul {
+  margin: 16px 0;
+  padding-left: 21px;
+}
+
+.note li {
+  margin-bottom: 7px;
+  line-height: 1.48;
+  overflow-wrap: anywhere;
+}
+
+.timestamp {
+  margin-top: auto;
+  padding-top: 12px;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+}
+
+/* =========================================================
+   10. EMPTY / LOADING STATES
+========================================================= */
+
+.status-message,
+.empty-state {
+  max-width: 620px;
+  margin: 40px auto;
+  padding: 34px;
   text-align: center;
-  font-size: 1rem;
+  color: var(--color-text-soft);
+}
+
+.empty-state {
+  background: var(--color-surface);
+  border: 1px dashed #cbd5da;
+  border-radius: var(--radius-lg);
+}
+
+.empty-state h2 {
+  margin: 0 0 8px;
+  color: var(--color-text);
+}
+
+.empty-state p {
   margin: 0;
 }
 
-/* Toggle Button (Login <-> Register) */
-.auth p button {
-  background: none;
-  border: none;
-  color: var(--color-accent);
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: underline;
-  padding: 0;
-}
+/* =========================================================
+   11. TABLET
+========================================================= */
 
-.auth p button:hover {
-  color: var(--color-accent-hover);
-}
-
-/* Responsive */
-@media (max-width: 650px) {
-  .auth {
-    max-width: 90%;
+@media (max-width: 950px) {
+  :root {
+    --sidebar-width: 235px;
   }
 
-  .auth h2 {
-    font-size: 2.2rem;
+  .main-content {
+    padding: 20px;
+  }
+
+  .notes {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+
+  .folder-actions {
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   12. MOBILE
+========================================================= */
+
+@media (max-width: 720px) {
+  .app-shell {
+    display: block;
+  }
+
+  .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    padding: 16px;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .folder-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .folder-divider {
+    display: none;
+  }
+
+  .folder-row {
+    min-width: 0;
+  }
+
+  .folder-row .folder-item {
+    padding-right: 65px;
+  }
+
+  .folder-actions {
+    position: absolute;
+    right: 5px;
+    opacity: 1;
+  }
+
+  .folder-edit-form {
+    grid-template-columns: 1fr;
+  }
+
+  .main-content {
+    padding: 16px;
+  }
+
+  .app-header {
+    padding: 18px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .notes {
+    grid-template-columns: 1fr;
+  }
+
+  .auth {
+    width: min(100% - 24px, 520px);
   }
 
   .auth form {
-    padding: 25px;
+    padding: 28px 22px;
   }
 
-  .auth input,
-  .auth form button {
-    font-size: 1rem;
-    padding: 14px;
+  .auth h2 {
+    font-size: 2.35rem;
+  }
+}
+
+/* =========================================================
+   13. SMALL MOBILE
+========================================================= */
+
+@media (max-width: 460px) {
+  .folder-list {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .app-header h1 {
+    font-size: 1.55rem;
+  }
+
+  .header-actions button:not(.logout-button) {
+    flex: 1;
+  }
+
+  .note {
+    min-height: 230px;
+    padding: 17px;
+  }
+
+  .note-heading {
+    flex-direction: column;
+  }
+
+  .note-folder-badge {
+    max-width: 100%;
+  }
+
+  .actions {
+    justify-content: stretch;
+  }
+
+  .actions button {
+    flex: 1;
+  }
+
+  .auth {
+    padding: 28px 0;
+    gap: 18px;
+  }
+
+  .auth form {
+    padding: 24px 18px;
+  }
+
+  .auth h2 {
+    font-size: 2.1rem;
   }
 }
