@@ -1,27 +1,32 @@
 import mongoose from "mongoose";
 
-// Note schema
 const noteSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true,
+      required: [true, "Note title is required"],
+      trim: true,
+      maxlength: [150, "Title cannot exceed 150 characters"],
     },
 
     content: {
       type: String,
-      required: true,
+      required: [true, "Note content is required"],
+      trim: true,
     },
 
-    pinned: {
-      type: Boolean,
-      default: false,
-    },
-
-    // This will be used later for user ownership
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true,
+      index: true,
+    },
+
+    folder: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Folder",
+      default: null,
+      index: true,
     },
   },
   {
@@ -29,5 +34,6 @@ const noteSchema = new mongoose.Schema(
   }
 );
 
-// Export the Note model
-export default mongoose.model("Note", noteSchema);
+const Note = mongoose.model("Note", noteSchema);
+
+export default Note;
