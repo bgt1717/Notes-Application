@@ -681,6 +681,10 @@ function App() {
     setNewNoteFolderId("");
   };
 
+  /* =========================================================
+     BULLET LIST HANDLING
+  ========================================================= */
+
   const handleContentChange = (setter) => (e) => {
     let value = e.target.value;
 
@@ -689,13 +693,41 @@ function App() {
       return;
     }
 
+    // Make sure the very first line starts with a bullet.
     if (!value.startsWith("• ")) {
       value = `• ${value}`;
     }
 
-    value = value.replace(/\n(?!• )/g, "\n• ");
-
+    // Do NOT automatically add bullets to every newline.
+    // This allows Backspace to work normally.
     setter(value);
+  };
+
+  const handleContentKeyDown = (e, value, setter) => {
+    if (e.key !== "Enter") {
+      return;
+    }
+
+    e.preventDefault();
+
+    const textarea = e.target;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+
+    const before = value.substring(0, start);
+    const after = value.substring(end);
+
+    // Create a new bullet when Enter is pressed.
+    const newValue = `${before}\n• ${after}`;
+
+    setter(newValue);
+
+    // Put the cursor after the new bullet.
+    requestAnimationFrame(() => {
+      textarea.selectionStart = start + 3;
+      textarea.selectionEnd = start + 3;
+    });
   };
 
   /* =========================================================
@@ -1224,6 +1256,13 @@ function App() {
               placeholder="Write your note"
               value={content}
               onChange={handleContentChange(setContent)}
+              onKeyDown={(e) =>
+                handleContentKeyDown(
+                  e,
+                  content,
+                  setContent
+                )
+              }
             />
 
             <div className="actions">
@@ -1295,6 +1334,13 @@ function App() {
                       onChange={handleContentChange(
                         setEditContent
                       )}
+                      onKeyDown={(e) =>
+                        handleContentKeyDown(
+                          e,
+                          editContent,
+                          setEditContent
+                        )
+                      }
                     />
 
                     <div className="actions">
